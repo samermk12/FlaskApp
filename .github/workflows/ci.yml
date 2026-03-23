@@ -9,17 +9,17 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: Install dependencies
         run: |
@@ -29,7 +29,3 @@ jobs:
       - name: Run tests
         run: |
           pytest
-
-      - name: Build Docker image
-        run: |
-          docker build -t flaskapp .
