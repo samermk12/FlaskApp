@@ -28,20 +28,19 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: |
-          pytest
+        run: pytest
 
   docker-build:
     name: Docker Build
     runs-on: ubuntu-latest
+    needs: test   # 👈 build seulement si tests OK
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: |
-          docker build -t flaskapp .
+        run: docker build -t flaskapp .
 
   notify-failure:
     name: Send email if tests fail
@@ -63,7 +62,10 @@ jobs:
           from: ${{ secrets.MAIL_USERNAME }}
           body: |
             Les tests ont échoué dans le projet FlaskApp.
+
             Dépôt : ${{ github.repository }}
             Branche : ${{ github.ref_name }}
             Workflow : ${{ github.workflow }}
-            Run : ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Voir le run :
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
